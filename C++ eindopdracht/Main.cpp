@@ -32,6 +32,10 @@ int main(int argc, char *argv[]) {
 		&Filemanager::printTravelers, &Filemanager::printTrips, &Filemanager::removeTraveler, 
 		&Filemanager::modifyTraveler, &Filemanager::addTraveler };
 	while(input != 1) {
+		if (input == -1) {
+			std::cout << "Not a valid input, Exiting program" << std::endl;
+			return 0;
+		}
 		(*fm.*functionPointers[input - 1])();
 		input = in->readInput();
 	}

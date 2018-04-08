@@ -153,7 +153,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C++ eindopdracht.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Filemanager.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Reis.cpp" />

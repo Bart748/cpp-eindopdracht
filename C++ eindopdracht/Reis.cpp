@@ -18,6 +18,8 @@ Reis::Reis() {
 	touringCar_ = 0;
 	destination_ = 0;
 	date_ = 0;
+	travelers_ = 0;
+	amount_ = 0;
 }
 
 Reis::Reis(const Reis& other) : amount_(other.amount_), travelers_(new Reiziger[other.amount_]) {
