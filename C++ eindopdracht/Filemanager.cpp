@@ -9,10 +9,6 @@
 Filemanager::Filemanager(std::string travelerpath, std::string trippath) {
 	readTravelerFile(travelerpath);
 	readTripFile(trippath);
-	amount_travelers_ = 0;
-	amount_trips_ = 0;
-	trips_ = 0;
-	travelers_ = 0;
 }
 
 Filemanager::Filemanager(const Filemanager& other) : amount_trips_(other.amount_trips_), amount_travelers_(other.amount_travelers_), trips_(new Reis[other.amount_trips_]), travelers_(new Reiziger[other.amount_travelers_]) {
@@ -494,7 +490,6 @@ void Filemanager::modifyTraveler() {
 	}
 }
 
-
 void Filemanager::addTrip() {
 	std::string input;
 	amount_trips_++;
@@ -502,7 +497,7 @@ void Filemanager::addTrip() {
 	for (unsigned m = 0; m < amount_trips_ - 1; m++) {
 		newTrips[m] = trips_[m];
 	}
-	newTrips[amount_trips_ - 1].setId(amount_trips_);
+	newTrips[amount_trips_ - 1].setId(amount_trips_ - 1);
 	std::cout << "Enter a destination for the new trip: " << std::endl;
 	std::getline(std::cin, input);
 	newTrips[amount_trips_ - 1].setDestination(input);
@@ -512,9 +507,12 @@ void Filemanager::addTrip() {
 	std::cout << "Enter a touring care for the new trip: " << std::endl;
 	std::getline(std::cin, input);
 	newTrips[amount_trips_ - 1].setTouringCar(input);
-	std::cout << newTrips[amount_trips_-1].getId() << " New trip added: " << newTrips[amount_trips_ - 1].getDestination() << "\t" << newTrips[amount_trips_ - 1].getDate() << std::endl;
+	std::cout << newTrips[amount_trips_ - 1].getId() << " New trip added: " << newTrips[amount_trips_ - 1].getDestination() << "\t" << newTrips[amount_trips_ - 1].getDate() << std::endl;
 	delete[] trips_;
 	trips_ = newTrips;
+	for (unsigned int i = 0; i < amount_trips_; i++) {
+		std::cout << "ID: " << trips_[i].getId() << "\nDestination: " << trips_[i].getDestination() << "\nDate: " << trips_[i].getDate() << std::endl;
+	}
 }
 
 void Filemanager::removeTrip() {
@@ -592,12 +590,81 @@ void Filemanager::findTrip() {
 	}
 }
 
-void Filemanager::readTravelerFile(std::string)
+void Filemanager::readTravelerFile(std::string path)
 {
 }
 
-void Filemanager::readTripFile(std::string)
-{
+void Filemanager::readTripFile(std::string path){
+	std::fstream file;
+	file.open(path, std::fstream::out);
+	unsigned tmpid = 0;
+	std::string tmp;
+	unsigned amount = 0;
+	unsigned line = 0;
+	size_t travelers_in_trip = 0;
+	bool tripN = false;
+	std::string dummyline;
+	Reiziger *r = 0;
+	if(file.is_open()) {
+		getline(file, dummyline);
+		std::cout << "Dummyline: " << dummyline << std::endl;
+		if(this->amount_trips_ == 3452816845) {
+			this->amount_trips_ = std::stoi(dummyline);
+			this->trips_ = new Reis[amount_trips_];
+		}
+		while(1) {
+			/*std::getline(file, tmp);
+			tmpid = std::stoi(tmp);
+			amount++;
+			trips_[amount - 1].setId(tmpid);
+			*/
+			std::getline(file, tmp);
+			bool contains_non_alpha = !std::regex_match(tmp, std::regex("^[A-Za-z][A-Za-z0-9]*(?:_?-?/?[A-Za-z0-9]+)*$"));
+			if(!contains_non_alpha) {
+				if ((amount >= 0 && r != nullptr)) {
+					trips_[amount - 1].setTravelers(r);
+					line = 0;
+				}
+				amount++;
+				trips_[amount - 1].setDestination(tmp);
+				std::getline(file, tmp);
+				tmpid = std::stoi(tmp);
+				trips_[amount - 1].setId(tmpid);
+				std::getline(file, tmp);
+				trips_[amount - 1].setDate(tmp);
+				std::getline(file, tmp);
+				trips_[amount - 1].setTouringCar(tmp);
+			}
+			else if(tripN) {
+				travelers_in_trip = std::stoi(tmp);
+				trips_[amount - 1].setAmount(travelers_in_trip);
+				r = new Reiziger[travelers_in_trip];
+				tripN = false;
+			}
+			else {
+				if (line < travelers_in_trip) {
+					if (travelers_[std::stoi(tmp)].GetName() != nullptr) {
+						r[line] = travelers_[std::stoi(tmp)];
+						line++;
+					}
+				}
+				if((amount >= 0 && r != nullptr) && file.eof()) {
+					trips_[amount - 1].setTravelers(r);
+					line = 0;
+					break;
+				}
+				else if (file.eof()) {
+					break;
+				}
+			}
+		}
+		file.close();
+		r = nullptr;
+	}
+	else {
+		std::cout << "File \"" << path << "\" not found" << std::endl;
+	}
+	delete[] r;
 }
 
 void Filemanager::writeTripFile(std::string path) {
@@ -636,12 +703,12 @@ void Filemanager::writeTravelerFile(std::string path) {
 		for (unsigned i = 0; i < amount_travelers_; i++) {
 			file << travelers_[i].GetName() << std::endl;
 			if (i < amount_travelers_ - 1) {
-				file << "address " << travelers_[i].getAddress();
-				file << "city " << travelers_[i].getCity();
+				file << "\naddress " << travelers_[i].getAddress();
+				file << "ncity " << travelers_[i].getCity();
 			}
 			else {
-				file << "address " << travelers_[i].getAddress();
-				file << "city " << travelers_[i].getCity();
+				file << "\naddress " << travelers_[i].getAddress();
+				file << "\ncity " << travelers_[i].getCity();
 			}
 		}
 		file.close();
