@@ -510,7 +510,7 @@ void Filemanager::addTrip() {
 	newTrips[amount_trips_ - 1].setDate(input);
 	std::cout << "Enter a touring care for the new trip: " << std::endl;
 	std::getline(std::cin, input);
-che	newTrips[amount_trips_ - 1].setTouringCar(input);
+	newTrips[amount_trips_ - 1].setTouringCar(input);
 	std::cout << newTrips[amount_trips_ - 1].getId() << " New trip added: " << newTrips[amount_trips_ - 1].getDestination() << "\t" << newTrips[amount_trips_ - 1].getDate() << std::endl;
 	delete[] trips_;
 	trips_ = newTrips;
