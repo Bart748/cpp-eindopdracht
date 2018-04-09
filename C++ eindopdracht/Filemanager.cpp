@@ -8,7 +8,11 @@
 
 Filemanager::Filemanager(std::string travelerpath, std::string trippath) {
 	readTravelerFile(travelerpath);
-	readTripFile(trippath);
+	//readTripFile(trippath);
+	amount_travelers_ = 0;
+	amount_trips_ = 0;
+	trips_ = 0;
+	travelers_ = 0;
 }
 
 Filemanager::Filemanager(const Filemanager& other) : amount_trips_(other.amount_trips_), amount_travelers_(other.amount_travelers_), trips_(new Reis[other.amount_trips_]), travelers_(new Reiziger[other.amount_travelers_]) {
