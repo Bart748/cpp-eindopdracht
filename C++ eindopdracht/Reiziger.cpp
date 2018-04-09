@@ -1,5 +1,15 @@
 #include "Reiziger.h"
 
+namespace detail{
+    void reserveAndCopyStr(char *dst, const char *src){
+        if (dst != NULL){
+            delete[] dst;
+            dst = new char[strlen(src)+1];
+            strcpy(dst, src);
+        }
+    }
+}
+
 Reiziger::Reiziger() {
 	id_ = 0;
 	name_ = 0;
@@ -9,9 +19,12 @@ Reiziger::Reiziger() {
 }
 
 Reiziger::Reiziger(const Reiziger& other) : id_(other.id_){
-	name_ = _strdup(other.name_);
-	address_ = _strdup(other.address_);
-	city_ = _strdup(other.city_);
+    detail::reserveAndCopyStr(name_, other.name_);
+	//name_ = _strdup(other.name_);
+    detail::reserveAndCopyStr(address_, other.address_);
+	//address_ = _strdup(other.address_);
+    detail::reserveAndCopyStr(city_, other.city_);
+	//city_ = _strdup(other.city_);
 }
 
 Reiziger::Reiziger(Reiziger&& other) : name_(nullptr), id_(0), address_(nullptr), city_(nullptr) {
@@ -24,14 +37,16 @@ Reiziger::~Reiziger() {
 	name_ = NULL;
 }
 
-
 Reiziger& Reiziger::operator=(const Reiziger& other) {
 	if (this != &other) {
 		delete[] name_;
-		name_ = _strdup(other.name_);
+        detail::reserveAndCopyStr(name_, other.name_);
+		//name_ = _strdup(other.name_);
 		id_ = other.id_;
-		address_ = _strdup(other.address_);
-		city_ = _strdup(other.city_);
+        detail::reserveAndCopyStr(address_, other.address_);
+		//address_ = _strdup(other.address_);
+        detail::reserveAndCopyStr(city_, other.city_);
+		//city_ = _strdup(other.city_);
 	}
 	return *this;
 }
@@ -39,10 +54,13 @@ Reiziger& Reiziger::operator=(const Reiziger& other) {
 Reiziger& Reiziger::operator=(Reiziger&& other) {
 	if (this != &other) {
 		delete[] name_;
-		name_ = _strdup(other.name_);
+        detail::reserveAndCopyStr(name_, other.name_);
+//		name_ = _strdup(other.name_);
 		id_ = other.id_;
-		address_ = _strdup(other.address_);
-		city_ = _strdup(other.city_);
+        detail::reserveAndCopyStr(address_, other.address_);
+//		address_ = _strdup(other.address_);
+        detail::reserveAndCopyStr(city_, other.city_);
+//		city_ = _strdup(other.city_);
 		other.name_ = nullptr;
 		other.id_ = 0;
 		other.address_ = nullptr;

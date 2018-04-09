@@ -40,18 +40,7 @@ Reis::~Reis() {
 }
 
 Reis& Reis::operator=(const Reis& other) {
-	if (this != &other) {
-		id_ = NULL;
-		delete[] travelers_;
-		amount_ = other.amount_;
-		id_ = other.id_;
-		createArray(amount_);
-		std::copy(other.travelers_, other.travelers_ + amount_, travelers_);
-	}
-	return *this;
-}
-
-Reis& Reis::operator=(Reis&& other) {
+    std::cout << "Const copy " << std::endl;
 	if (this != &other) {
 		id_ = NULL;
 		delete[] travelers_;
@@ -61,15 +50,13 @@ Reis& Reis::operator=(Reis&& other) {
 		date_ = other.date_;
 		travelers_ = other.travelers_;
 		amount_ = other.amount_;
-
-		other.id_ = 0;
-		other.touringCar_ = nullptr;
-		other.destination_ = nullptr;
-		other.date_ = nullptr;
-		other.travelers_ = nullptr;
-		other.amount_ = 0;
 	}
 	return *this;
+}
+
+Reis& Reis::operator=(Reis&& other) {
+    std::cout << "Non-const copy " << std::endl;
+    return (*this = other);
 }
 
 int Reis::deleteTraveler(int id) {
