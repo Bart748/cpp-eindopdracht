@@ -144,6 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="travelerfile.txt" />
+    <Text Include="tripfile.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Filemanager.h" />

@@ -16,6 +16,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="travelerfile.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="tripfile.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

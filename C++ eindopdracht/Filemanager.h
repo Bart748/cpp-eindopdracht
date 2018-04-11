@@ -29,12 +29,13 @@ public:
 	virtual void modifyTraveler(); //
 
 	virtual void addTrip();//
+	virtual bool validName(std::string);
 	virtual void editTrip(); //
 	virtual void removeTrip(); //
 	virtual void findTrip(); //
 
 	virtual void readTravelerFile(std::string);
-	virtual void readTripFile(std::string);
+	virtual void readTripFile(std::string); //
 	virtual void writeTravelerFile(std::string); //
 	virtual void writeTripFile(std::string); //
 

@@ -4,21 +4,21 @@
 #include <algorithm>
 
 void Interface::printInterface() {
-	std::cout << ("________________________________\n") << std::endl;
-	std::cout << ("What would you like to do:      \n") << std::endl;
-	std::cout << ("(A) to add a traveler           \n") << std::endl;
-	std::cout << ("(M) to modify traveler          \n") << std::endl;
-	std::cout << ("(R) to remove a traveler        \n") << std::endl;
-	std::cout << ("(F) to find traveler            \n") << std::endl;
-	std::cout << ("(P) to print all travelers      \n") << std::endl;
-	std::cout << ("(T) to add new Trip             \n") << std::endl;
-	std::cout << ("(E) to edit Trip                \n") << std::endl;
-	std::cout << ("(Z) to remove Trip              \n") << std::endl;
-	std::cout << ("(H) to find Trip                \n") << std::endl;
-	std::cout << ("(1) print all Trips             \n") << std::endl;
-	std::cout << ("(U) print everything            \n") << std::endl;
-	std::cout << ("(X) to save & exit              \n") << std::endl;
-	std::cout << ("________________________________\n") << std::endl;
+	std::cout << ("________________________________") << std::endl;
+	std::cout << ("What would you like to do:      ") << std::endl;
+	std::cout << ("(A) to add a traveler           ") << std::endl;
+	std::cout << ("(M) to modify traveler          ") << std::endl;
+	std::cout << ("(R) to remove a traveler        ") << std::endl;
+	std::cout << ("(F) to find traveler            ") << std::endl;
+	std::cout << ("(P) to print all travelers      ") << std::endl;
+	std::cout << ("(T) to add new Trip             ") << std::endl;
+	std::cout << ("(E) to edit Trip                ") << std::endl;
+	std::cout << ("(Z) to remove Trip              ") << std::endl;
+	std::cout << ("(H) to find Trip                ") << std::endl;
+	std::cout << ("(1) print all Trips             ") << std::endl;
+	std::cout << ("(U) print everything            ") << std::endl;
+	std::cout << ("(X) to save & exit              ") << std::endl;
+	std::cout << ("________________________________") << std::endl;
 	std::cout << std::endl;
 }
 

@@ -4,15 +4,13 @@
 #include <regex>
 #include <iostream>
 
-
-
 Filemanager::Filemanager(std::string travelerpath, std::string trippath) {
 	readTravelerFile(travelerpath);
-	//readTripFile(trippath);
-	amount_travelers_ = 0;
-	amount_trips_ = 0;
-	trips_ = 0;
-	travelers_ = 0;
+	readTripFile(trippath);
+	//amount_travelers_ = 0;
+	//	amount_trips_ = 0;
+	//	trips_ = 0;
+	//travelers_ = 0;
 }
 
 Filemanager::Filemanager(const Filemanager& other) : amount_trips_(other.amount_trips_), amount_travelers_(other.amount_travelers_), trips_(new Reis[other.amount_trips_]), travelers_(new Reiziger[other.amount_travelers_]) {
@@ -504,7 +502,12 @@ void Filemanager::addTrip() {
 	newTrips[amount_trips_ - 1].setId(amount_trips_ - 1);
 	std::cout << "Enter a destination for the new trip: " << std::endl;
 	std::getline(std::cin, input);
-	newTrips[amount_trips_ - 1].setDestination(input);
+	if (validName(input)) {
+		newTrips[amount_trips_ - 1].setDestination(input);
+	} else {
+		std::cout << "The Destination can not be a number" << std::endl;
+		return;
+	}
 	std::cout << "Enter a date for the new trip: " << std::endl;
 	std::getline(std::cin, input);
 	newTrips[amount_trips_ - 1].setDate(input);
@@ -514,9 +517,18 @@ void Filemanager::addTrip() {
 	std::cout << newTrips[amount_trips_ - 1].getId() << " New trip added: " << newTrips[amount_trips_ - 1].getDestination() << "\t" << newTrips[amount_trips_ - 1].getDate() << std::endl;
 	delete[] trips_;
 	trips_ = newTrips;
-	for (unsigned int i = 0; i < amount_trips_; i++) {
-		std::cout << "ID: " << trips_[i].getId() << "\nDestination: " << trips_[i].getDestination() << "\nDate: " << trips_[i].getDate() << std::endl;
-	}
+}
+
+bool Filemanager::validName(std::string name)
+{
+	if (name.length() == 0)
+		return false; // `name` cannot be empty
+
+	for (int i = 0; i < name.length(); i++)
+		if (name[i] >= '0' && name[i] <= '9')
+			return false; // There is a number in `name`
+
+	return true; // `name` is valid
 }
 
 void Filemanager::removeTrip() {
@@ -594,13 +606,58 @@ void Filemanager::findTrip() {
 	}
 }
 
-void Filemanager::readTravelerFile(std::string path)
-{
+void Filemanager::readTravelerFile(std::string path) {
+	std::ifstream file;
+	//	std::cout << path << std::endl;
+	file.open(path);
+	std::string tmp;
+	unsigned amount = 0;
+	std::string dummyline;
+	bool endOfFile = false;
+	unsigned tmpid = 0;
+	if (file.is_open()) {
+		getline(file, dummyline);
+		//std::cout << dummyline << std::endl;
+		if (this->amount_travelers_ == 3452816845) {
+			int parse = std::stoi(dummyline);
+			if (parse > 0) {
+				amount_travelers_ = parse;
+				travelers_ = new Reiziger[amount_travelers_];
+			}
+		}
+		while (!endOfFile) {
+			std::getline(file, tmp);
+			//std::cout << tmp << std::endl;
+			if (!tmp.empty()) {
+				amount++;
+				tmpid = std::stoi(tmp);
+				//std::cout << "ID: " << tmpid << std::endl;
+				travelers_[amount - 1].SetId(tmpid);
+				std::getline(file, tmp);
+				//std::cout << "Name: " << tmp << std::endl;
+				travelers_[amount - 1].SetName(tmp);
+				std::getline(file, tmp);
+				//std::cout << "Address: " << tmp << std::endl;
+				travelers_[amount - 1].SetAddress(tmp);
+				std::getline(file, tmp);
+				//std::cout << "city: " << tmp << std::endl;
+				travelers_[amount - 1].SetCity(tmp);
+			}
+			else {
+				endOfFile = true;
+			}
+		}
+		file.close();
+	}
+	else {
+		std::cout << "File " << path << "not found" << std::endl;
+	}
 }
 
-void Filemanager::readTripFile(std::string path){
-	std::fstream file;
-	file.open(path, std::fstream::out);
+void Filemanager::readTripFile(std::string path) {
+	std::ifstream file;
+	file.open(path);
+	//std::cout << path << std::endl;
 	unsigned tmpid = 0;
 	std::string tmp;
 	unsigned amount = 0;
@@ -609,40 +666,45 @@ void Filemanager::readTripFile(std::string path){
 	bool tripN = false;
 	std::string dummyline;
 	Reiziger *r = 0;
-	if(file.is_open()) {
+	int num;
+	if (file.is_open()) {
 		getline(file, dummyline);
-		std::cout << "Dummyline: " << dummyline << std::endl;
-		if(this->amount_trips_ == 3452816845) {
+		if (this->amount_trips_ == 3452816845) {
 			this->amount_trips_ = std::stoi(dummyline);
 			this->trips_ = new Reis[amount_trips_];
 		}
-		while(1) {
-			/*std::getline(file, tmp);
-			tmpid = std::stoi(tmp);
-			amount++;
-			trips_[amount - 1].setId(tmpid);
-			*/
+		while (1) {
 			std::getline(file, tmp);
-			bool contains_non_alpha = !std::regex_match(tmp, std::regex("^[A-Za-z][A-Za-z0-9]*(?:_?-?/?[A-Za-z0-9]+)*$"));
-			if(!contains_non_alpha) {
-				if ((amount >= 0 && r != nullptr)) {
+			//std::cout << tmp << std::endl;
+			//bool contains_non_alpha = !std::regex_match(tmp, std::regex("^[A-Za-z][A-Za-z0-9]*(?:_?-?/?[A-Za-z0-9]+)*$"));
+			num = atoi(tmp.c_str());
+			//std::cout << "Num is: " << num << std::endl;
+			if (num == 0 && tmp[0] != '0' && !tmp.empty()) {
+				if ((amount >= 0 && r != nullptr && travelers_in_trip != 0)) {
 					trips_[amount - 1].setTravelers(r);
 					line = 0;
 				}
 				amount++;
+				//std::cout << "destination: " << tmp << std::endl;
 				trips_[amount - 1].setDestination(tmp);
 				std::getline(file, tmp);
 				tmpid = std::stoi(tmp);
+				//std::cout << "id: " << tmpid << std::endl;
 				trips_[amount - 1].setId(tmpid);
 				std::getline(file, tmp);
+				//std::cout << "date: " << tmp << std::endl;
 				trips_[amount - 1].setDate(tmp);
 				std::getline(file, tmp);
+				//std::cout << "TC: " << tmp << std::endl;
 				trips_[amount - 1].setTouringCar(tmp);
+				tripN = true;
 			}
-			else if(tripN) {
+			else if (tripN) {
 				travelers_in_trip = std::stoi(tmp);
-				trips_[amount - 1].setAmount(travelers_in_trip);
-				r = new Reiziger[travelers_in_trip];
+				if (travelers_in_trip > 0) {
+					trips_[amount - 1].setAmount(travelers_in_trip);
+					r = new Reiziger[travelers_in_trip];
+				}
 				tripN = false;
 			}
 			else {
@@ -652,7 +714,7 @@ void Filemanager::readTripFile(std::string path){
 						line++;
 					}
 				}
-				if((amount >= 0 && r != nullptr) && file.eof()) {
+				if ((amount >= 0 && r != nullptr) && file.eof()) {
 					trips_[amount - 1].setTravelers(r);
 					line = 0;
 					break;
@@ -677,16 +739,18 @@ void Filemanager::writeTripFile(std::string path) {
 	if (file.is_open()) {
 		file << amount_trips_ << std::endl;
 		for (unsigned i = 0; i < amount_trips_; i++) {
-			file << trips_[i].getId() << std::endl;
 			file << trips_[i].getDestination() << std::endl;
+			file << trips_[i].getId() << std::endl;
 			file << trips_[i].getDate() << std::endl;
 			file << trips_[i].getTouringCar() << std::endl;
 			file << trips_[i].getAmount() << std::endl;
-			for (unsigned j = 0; trips_[i].getAmount(); j++) {
+			for (unsigned j = 0; j < trips_[i].getAmount(); j++) {
 				if (i == amount_trips_ - 1 && j == (trips_[i].getAmount() - 1)) {
+					//std::cout << travelers_[(trips_[i].getTravelers()[j].getId() - 1)].getId() - 1 << std::endl;
 					file << travelers_[(trips_[i].getTravelers()[j].getId() - 1)].getId() - 1;
 				}
 				else {
+					//std::cout  << travelers_[(trips_[i].getTravelers()[j].getId() - 1)].getId() - 1 << std::endl;
 					file << travelers_[(trips_[i].getTravelers()[j].getId() - 1)].getId() - 1 << std::endl;
 				}
 			}
@@ -705,15 +769,10 @@ void Filemanager::writeTravelerFile(std::string path) {
 		file.clear();
 		file << amount_travelers_ << std::endl;
 		for (unsigned i = 0; i < amount_travelers_; i++) {
+			file << travelers_[i].getId() << std::endl;
 			file << travelers_[i].GetName() << std::endl;
-			if (i < amount_travelers_ - 1) {
-				file << "\naddress " << travelers_[i].getAddress();
-				file << "ncity " << travelers_[i].getCity();
-			}
-			else {
-				file << "\naddress " << travelers_[i].getAddress();
-				file << "\ncity " << travelers_[i].getCity();
-			}
+			file << travelers_[i].getAddress() << std::endl;
+			file << travelers_[i].getCity() << std::endl;
 		}
 		file.close();
 	}
@@ -730,6 +789,7 @@ void Filemanager::printTrips() {
 		for (unsigned int j = 0; j < trips_[i].getAmount(); j++) {
 			std::cout << trips_[i].getTravelers()[j].GetName() << std::endl;
 		}
+		std::cout << "\n" << std::endl;
 	}
 }
 
@@ -746,8 +806,9 @@ void Filemanager::print() {
 		std::cout << "ID: " << trips_[i].getId() << "\nDestination: " << trips_[i].getDestination() << "\nDate: " << trips_[i].getDate() << std::endl;
 		std::cout << "\nTravelers:" << std::endl;
 		for (unsigned int j = 0; j < trips_[i].getAmount(); j++) {
-			std::cout << "\n" << trips_[i].getTravelers()[j].GetName() << std::endl;
+			std::cout << trips_[i].getTravelers()[j].GetName() << std::endl;
 		}
+		std::cout << "\n" << std::endl;
 	}
 	std::cout << "-------------------------" << std::endl;
 	std::cout << "traveler: " << std::endl;

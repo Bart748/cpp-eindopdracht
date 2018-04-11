@@ -24,18 +24,48 @@ Reis::Reis() {
 
 Reis::Reis(const Reis& other) : amount_(other.amount_), travelers_(new Reiziger[other.amount_]) {
 	id_ = other.id_;
+	destination_ = other.destination_;
+	date_ = other.date_;
+	touringCar_ = other.destination_;
 	std::copy(other.travelers_, other.travelers_ + amount_, travelers_);
 }
 
 Reis::Reis(Reis&& other) : id_(0), touringCar_(nullptr), destination_(nullptr), date_(nullptr), travelers_(nullptr), amount_(0) {
 	*this = std::move(other);
 }
+/*
+Reis& Reis::operator=(const Reis& other) {
+	std::cout << "Const copy " << std::endl;
+	if (this != &other) {
+		id_ = NULL;
+		delete[] travelers_;
+		id_ = other.id_;
+		touringCar_ = other.touringCar_;
+		destination_ = other.destination_;
+		date_ = other.date_;
+		travelers_ = other.travelers_;
+		amount_ = other.amount_;
+	}
+	return *this;
+}
+
+Reis& Reis::operator=(Reis&& other) {
+	std::cout << "Non-const copy " << std::endl;
+	return (*this = other);
+}
+*/
 
 
 Reis::~Reis() {
 	id_ = NULL;
+	delete[] destination_;
+	delete[] date_;
+	delete[] touringCar_;
 	delete[] travelers_;
 	travelers_ = nullptr;
+	destination_ = NULL;
+	date_ = NULL;
+	touringCar_ = NULL;
 
 }
 
@@ -45,6 +75,9 @@ Reis& Reis::operator=(const Reis& other) {
 		delete[] travelers_;
 		amount_ = other.amount_;
 		id_ = other.id_;
+		destination_ = _strdup(other.destination_);
+		date_ = _strdup(other.date_);
+		touringCar_ = _strdup(other.touringCar_);
 		createArray(amount_);
 		std::copy(other.travelers_, other.travelers_ + amount_, travelers_);
 	}
@@ -109,7 +142,7 @@ int Reis::findTraveler(int id) {
 }
 
 void Reis::addTraveler(Reiziger traveler) {
-	if(findTraveler(traveler.getId()) >= 0) {
+	if (findTraveler(traveler.getId()) >= 0) {
 		return;
 	}
 	else {
@@ -122,26 +155,26 @@ void Reis::addTraveler(Reiziger traveler) {
 		newTravelers[amount_ - 1] = traveler;
 		travelers_ = newTravelers;
 	}
-	
+
 }
 
 void Reis::modifyTravelerName(std::string name, int id) {
 	int index = findTraveler(id);
-	if(index > -1) {
+	if (index > -1) {
 		travelers_[index].SetName(name);
 	}
 }
 
 void Reis::modifyTravelerAddress(std::string address, int id) {
 	int index = findTraveler(id);
-	if(index > -1) {
+	if (index > -1) {
 		travelers_[index].SetAddress(address);
 	}
 }
 
 void Reis::modifyTravelerCity(std::string city, int id) {
 	int index = findTraveler(id);
-	if(index > -1) {
+	if (index > -1) {
 		travelers_[index].SetCity(city);
 	}
 }

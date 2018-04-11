@@ -1,3 +1,17 @@
+4
 1
 Bart
-address Kamillestraat 34city Aalst
+Goudenregenlaan 78
+Aalst
+2
+Jereziah
+Denmarkstraat 38
+Copenhagen
+3
+Martin
+Raisenlane 25
+Lincoln
+4
+Petra
+Raisenlane 25
+Lincoln
